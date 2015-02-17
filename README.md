@@ -2,6 +2,8 @@
 
 Inspiring quotations, misattributed.
 
+Tweeting at https://twitter.com/soamazingquote
+
 Based on https://github.com/dariusk/grunt-init-twitter-bot
 
 ## License
