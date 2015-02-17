@@ -1,6 +1,8 @@
-# lincolnbot (Famus Quotes)
+# So Amazing Quote
 
-The world's most inspiring quotations
+Inspiring quotations, misattributed.
+
+Based on https://github.com/dariusk/grunt-init-twitter-bot
 
 ## License
 Copyright (c) 2015 Liza Daly  
