@@ -29,7 +29,10 @@ var authors = [ { 'name': 'Abraham Lincoln',
                 },
                 { 'name': 'Winston Churchill',
                   'images': ['churchill.jpg']
-                }
+                },
+                { 'name': 'Steve Jobs',
+                  'images': ['jobs1.jpg']
+                } 
              ];
 
 var imgdir = __dirname + '/out.png';
