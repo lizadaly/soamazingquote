@@ -8,6 +8,7 @@ import tempfile
 import os.path
 import re
 
+from PIL import Image, ImageFont, ImageDraw
 
 from secret import *
 from config import *
@@ -18,14 +19,44 @@ emoji_re = re.compile(u'['
                       u'\u2600-\u26FF\u2700-\u27BF]+', 
                       re.UNICODE)
 
+def draw_word_wrap(draw, text,
+                   xpos=0, ypos=0,
+                   max_width=130,
+                   fill=(250,0,0),
+                   font=None):
+    '''Draw the given ``text`` to the x and y position of the image, using
+    the minimum length word-wrapping algorithm to restrict the text to
+    a pixel width of ``max_width.``
+    '''
+    text_size_x, text_size_y = draw.textsize(text, font=font)
+    remaining = max_width
+    space_width, space_height = draw.textsize(' ', font=font)
+    # use this list as a stack, push/popping each line
+    output_text = []
+    # split on whitespace...    
+    for word in text.split(None):
+        word_width, word_height = draw.textsize(word, font=font)
+        if word_width + space_width > remaining:
+            output_text.append(word)
+            remaining = max_width - word_width
+        else:
+            if not output_text:
+                output_text.append(word)
+            else:
+                output = output_text.pop()
+                output += ' %s' % word
+                output_text.append(output)
+            remaining = remaining - (word_width + space_width)
+    for text in output_text:
+        draw.text((xpos, ypos), text, font=font, fill=fill)
+        ypos += text_size_y
+        
 def _auth():
-
+    """Authorize the service with Twitter"""
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.secure = True
     auth.set_access_token(access_token, access_token_secret)
-    api = tweepy.API(auth)
-
-    return api
+    return tweepy.API(auth)
 
 def post_tweet(recipe, message):
     print("Posting message {}".format(message))
@@ -58,7 +89,7 @@ def filter_tweet(tweet):
             return None
 
     # Remove newlines from tweets
-    tweet = tweet.replace('\n', ' ')
+    tweet = tweet.replace('\n', ' ').replace('"', '')
     return tweet
 
 def search(term, api):
@@ -71,9 +102,37 @@ def search(term, api):
     r = set(map(filter_tweet, res))
     if None in r:
         r.remove(None)
+    if r:
+        return random.choice(list(r))
 
+def generate_image(tweet, author):
+    tweet = '“' + tweet + '”'
+    im = Image.open('images/' + random.choice(author['images']))
+    card = Image.new('RGB', (CARD_WIDTH, CARD_HEIGHT), color=(0,0,0))
+    card.paste(im, (card.width - im.width, 0))
+    draw = ImageDraw.Draw(card)
+    font = ImageFont.truetype('fonts/Papyrus.ttc', size=FONT_SIZE)
+    max_width = CARD_WIDTH / 1.8
+    draw_word_wrap(draw, tweet,
+                   max_width=max_width,
+                   xpos=CARD_MARGIN,
+                   ypos=CARD_MARGIN,
+                   fill=(255, 255, 255),
+                   font=font)
+
+    byline = '—' + author['name']
+    draw_word_wrap(draw, byline,
+                   max_width=max_width,
+                   xpos=CARD_MARGIN,
+                   ypos=CARD_HEIGHT - CARD_MARGIN - font.getsize("a")[1],
+                   fill=(255,255,153),
+                   font=font)
+    card.save('out.png')
     
 if __name__ == '__main__':
     api = _auth()
-    search("disrupt", api)
-    
+    word = random.choice(TERMS)
+    tweet = search(word, api)
+    if tweet:
+        author = random.choice(AUTHORS)
+        generate_image(tweet, author)

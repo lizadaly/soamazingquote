@@ -1,24 +1,39 @@
 CARD_WIDTH = 800
 CARD_HEIGHT = 400
+CARD_MARGIN = 40
+
+FONT_SIZE = 35
+
 AUTHORS = [
     {'name': 'Abraham Lincoln',
-     'images': ['lincoln1.jpg'],
+     'images': ['lincoln1.jpg', 'lincoln2.jpg'],
     },
+    {'name': 'Aristotle',
+     'images': ['aristotle1.jpg', 'aristotle2.jpg'],
+    },    
     { 'name': 'Albert Einstein',
-      'images': ['einstein1.jpg']
+      'images': ['einstein1.jpg', 'einstein2.jpg']
     },
     { 'name': 'Mark Twain',
-      'images': ['twain.jpg']
+      'images': ['twain1.jpg', 'twain2.jpg']
     },
     { 'name': 'Winston Churchill',
-      'images': ['churchill.jpg']
+      'images': ['churchill1.jpg, churchill2.jpg']
+    },
+    { 'name': 'Amelia Earhart',
+      'images': ['earhart.jpg']
+    },
+    {
+        'name': 'Henry David Thoreau',
+        'images': ['thoreau1.jpg']
     }
+
 ]
 
 FONTS = ['Chalkboard', 'Herculanum', 'Noteworthy Light', 'Papyrus']
 BGS = ['bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg']
 
-TERMS = ['mindfulness', 'enterpreneurship', 'disruption', 'achievement', 'courage']
+TERMS = ['leadership', 'enterpreneur', 'disruption', 'achievement', 'courage', 'bravery', 'without limits', 'boundless', 'teamwork', 'humbled', 'blessed', 'courageous', 'success', 'keep moving', 'inspirational', 'inspire',]
 
 FILTER_WORDS = set([
     "skank",
