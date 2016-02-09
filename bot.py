@@ -111,7 +111,16 @@ def generate_image(tweet, author):
     card = Image.new('RGB', (CARD_WIDTH, CARD_HEIGHT), color=(0,0,0))
     card.paste(im, (card.width - im.width, 0))
     draw = ImageDraw.Draw(card)
-    font = ImageFont.truetype('fonts/Papyrus.ttc', size=FONT_SIZE)
+
+    # Take the base font size and make it smaller for larger tweets
+    if len(tweet) < 20:
+        font_size = int(FONT_SIZE * 1.25)
+    elif len(tweet) > 200:
+        font_size = int(FONT_SIZE * .75)
+    else:
+        font_size = FONT_SIZE
+    
+    font = ImageFont.truetype('fonts/' + random.choice(FONTS), size=font_size)
     max_width = CARD_WIDTH / 1.8
     draw_word_wrap(draw, tweet,
                    max_width=max_width,
@@ -122,7 +131,7 @@ def generate_image(tweet, author):
 
     byline = '—' + author['name']
     draw_word_wrap(draw, byline,
-                   max_width=max_width,
+                   max_width=CARD_WIDTH,
                    xpos=CARD_MARGIN,
                    ypos=CARD_HEIGHT - CARD_MARGIN - font.getsize("a")[1],
                    fill=(255,255,153),

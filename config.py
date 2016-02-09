@@ -18,19 +18,18 @@ AUTHORS = [
       'images': ['twain1.jpg', 'twain2.jpg']
     },
     { 'name': 'Winston Churchill',
-      'images': ['churchill1.jpg, churchill2.jpg']
+      'images': ['churchill1.jpg', 'churchill2.jpg']
     },
     { 'name': 'Amelia Earhart',
       'images': ['earhart.jpg']
     },
-    {
-        'name': 'Henry David Thoreau',
-        'images': ['thoreau1.jpg']
+    { 'name': 'Henry David Thoreau',
+      'images': ['thoreau1.jpg']
     }
 
 ]
 
-FONTS = ['Chalkboard', 'Herculanum', 'Noteworthy Light', 'Papyrus']
+FONTS = ['comic.ttf', 'Herculanum.ttf', 'brush.ttf', 'Papyrus.ttc']
 BGS = ['bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg']
 
 TERMS = ['leadership', 'enterpreneur', 'disruption', 'achievement', 'courage', 'bravery', 'without limits', 'boundless', 'teamwork', 'humbled', 'blessed', 'courageous', 'success', 'keep moving', 'inspirational', 'inspire',]
