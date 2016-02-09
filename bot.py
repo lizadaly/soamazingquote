@@ -58,55 +58,54 @@ def _auth():
     auth.set_access_token(access_token, access_token_secret)
     return tweepy.API(auth)
 
-def post_tweet(recipe, message):
-    print("Posting message {}".format(message))
-    
-    tfile = os.path.join(tempfile.mkdtemp(), filename)
-    with open(tfile, 'wb') as f:
-        for chunk in r.iter_content(chunk_size=1024): 
-            if chunk: 
-                f.write(chunk)
-                f.flush()
-        api.update_with_media(tfile, status=message)
+def post_tweet(tweet, card, author):
+    """Post to twitter with the given tweet and card image as attachment"""
+    byline = '—' + author['name']
+    with tempfile.TemporaryFile() as fp:
+        card.save(fp, format='PNG')
+
+        print("Posting message {}".format(tweet))
+        api.update_with_media('quote.png', status=tweet + byline, file=fp)
 
 def filter_tweet(tweet):
     """Drop any which have characteristics we don't like: retweets, directed messages, or URLs. Returns 
     None for a tweet we don't want"""
-    
+
     if '@' in tweet or 'RT' in tweet or 'http' in tweet or '#' in tweet:
-        return None
+        return False
+    
+    if len(tweet) > (140 - 23 - 23):
+        return False
     
     # Check each word for badness; use startswith as a lazy way of matching verb tenses
     words = tweet.split(' ')
     for word in words:
         for bad in FILTER_WORDS:
             if word.startswith(bad):
-                return None
+                return False
 
     # Filter out emoji as we'll lose them in the output font anyway
     for word in tweet.split(' '):
         if emoji_re.match(word):
-            return None
+            return False
 
-    # Remove newlines from tweets
-    tweet = tweet.replace('\n', ' ').replace('"', '')
-    return tweet
+    return True
 
 def search(term, api):
     res = set(tweet.text for tweet in tweepy.Cursor(api.search,
                                                     q=term,
-                                                    rpp=100,
+                                                    rpp=NUM_TWEETS_TO_SEARCH,
                                                     result_type="recent",
                                                     include_entities=True,
-                                                    lang="en").items(100))
-    r = set(map(filter_tweet, res))
+                                                    lang="en").items(NUM_TWEETS_TO_SEARCH))
+    r = set(filter(filter_tweet, res))
     if None in r:
         r.remove(None)
     if r:
-        return random.choice(list(r))
+        return random.choice(list(r)).replace('\n', ' ').replace('"', '')
 
 def generate_image(tweet, author):
-    tweet = '“' + tweet + '”'
+    """Given a tweet and a random author, generate a new twitter card"""
     im = Image.open('images/' + random.choice(author['images']))
     card = Image.new('RGB', (CARD_WIDTH, CARD_HEIGHT), color=(0,0,0))
     card.paste(im, (card.width - im.width, 0))
@@ -136,12 +135,15 @@ def generate_image(tweet, author):
                    ypos=CARD_HEIGHT - CARD_MARGIN - font.getsize("a")[1],
                    fill=(255,255,153),
                    font=font)
-    card.save('out.png')
+    return card
     
 if __name__ == '__main__':
     api = _auth()
     word = random.choice(TERMS)
     tweet = search(word, api)
     if tweet:
+        tweet = '“' + tweet + '”'
         author = random.choice(AUTHORS)
-        generate_image(tweet, author)
+        card = generate_image(tweet, author)
+        if card:
+            post_tweet(tweet, card, author)

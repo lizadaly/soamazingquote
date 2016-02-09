@@ -4,6 +4,8 @@ CARD_MARGIN = 40
 
 FONT_SIZE = 35
 
+NUM_TWEETS_TO_SEARCH = 100
+
 AUTHORS = [
     {'name': 'Abraham Lincoln',
      'images': ['lincoln1.jpg', 'lincoln2.jpg'],
