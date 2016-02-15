@@ -13,11 +13,7 @@ from PIL import Image, ImageFont, ImageDraw
 from secret import *
 from config import *
 
-emoji_re = re.compile(u'['
-                      u'\U0001F300-\U0001F64F'
-                      u'\U0001F680-\U0001F6FF'
-                      u'\u2600-\u26FF\u2700-\u27BF]+', 
-                      re.UNICODE)
+plaintext_re = re.compile(r'^[A-Za-z ]*$')
 
 def draw_word_wrap(draw, text,
                    xpos=0, ypos=0,
@@ -33,7 +29,7 @@ def draw_word_wrap(draw, text,
     space_width, space_height = draw.textsize(' ', font=font)
     # use this list as a stack, push/popping each line
     output_text = []
-    # split on whitespace...    
+    # split on whitespace...
     for word in text.split(None):
         word_width, word_height = draw.textsize(word, font=font)
         if word_width + space_width > remaining:
@@ -50,7 +46,7 @@ def draw_word_wrap(draw, text,
     for text in output_text:
         draw.text((xpos, ypos), text, font=font, fill=fill)
         ypos += text_size_y
-        
+
 def _auth():
     """Authorize the service with Twitter"""
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -68,15 +64,15 @@ def post_tweet(tweet, card, author):
         api.update_with_media('quote.png', status=tweet + byline, file=fp)
 
 def filter_tweet(tweet):
-    """Drop any which have characteristics we don't like: retweets, directed messages, or URLs. Returns 
+    """Drop any which have characteristics we don't like: retweets, directed messages, or URLs. Returns
     None for a tweet we don't want"""
 
     if '@' in tweet or 'RT' in tweet or 'http' in tweet or '#' in tweet:
         return False
-    
+
     if len(tweet) > (140 - 23 - 23):
         return False
-    
+
     # Check each word for badness; use startswith as a lazy way of matching verb tenses
     words = tweet.split(' ')
     for word in words:
@@ -86,7 +82,7 @@ def filter_tweet(tweet):
 
     # Filter out emoji as we'll lose them in the output font anyway
     for word in tweet.split(' '):
-        if emoji_re.match(word):
+        if not plaintext_re.match(word):
             return False
 
     return True
@@ -118,7 +114,7 @@ def generate_image(tweet, author):
         font_size = int(FONT_SIZE * .75)
     else:
         font_size = FONT_SIZE
-    
+
     font = ImageFont.truetype('fonts/' + random.choice(FONTS), size=font_size)
     max_width = CARD_WIDTH / 1.8
     draw_word_wrap(draw, tweet,
@@ -136,7 +132,7 @@ def generate_image(tweet, author):
                    fill=(255,255,153),
                    font=font)
     return card
-    
+
 if __name__ == '__main__':
     api = _auth()
     word = random.choice(TERMS)

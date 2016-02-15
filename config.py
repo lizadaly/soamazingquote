@@ -12,7 +12,7 @@ AUTHORS = [
     },
     {'name': 'Aristotle',
      'images': ['aristotle1.jpg', 'aristotle2.jpg'],
-    },    
+    },
     { 'name': 'Albert Einstein',
       'images': ['einstein1.jpg', 'einstein2.jpg']
     },
@@ -31,7 +31,7 @@ AUTHORS = [
 
 ]
 
-FONTS = ['comic.ttf', 'Herculanum.ttf', 'brush.ttf', 'Papyrus.ttc']
+FONTS = ['comic.ttf', 'Herculanum.ttf', 'Papyrus.ttc']
 BGS = ['bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg']
 
 TERMS = ['leadership', 'enterpreneur', 'disruption', 'achievement', 'courage', 'bravery', 'without limits', 'boundless', 'teamwork', 'humbled', 'blessed', 'courageous', 'success', 'keep moving', 'inspirational', 'inspire',]
@@ -84,4 +84,3 @@ FILTER_WORDS = set([
     "raghead",
     "negro",
     "hooker"])
-
