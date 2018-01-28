@@ -28,13 +28,12 @@ AUTHORS = [
     { 'name': 'Henry David Thoreau',
       'images': ['thoreau1.jpg']
     }
-
 ]
 
 FONTS = ['comic.ttf', 'Herculanum.ttf', 'Papyrus.ttc']
 BGS = ['bg1.jpg', 'bg2.jpg', 'bg3.jpg', 'bg4.jpg']
 
-TERMS = ['leadership', 'enterpreneur', 'disruption', 'achievement', 'courage', 'bravery', 'without limits', 'boundless', 'teamwork', 'humbled', 'blessed', 'courageous', 'success', 'keep moving', 'inspirational', 'inspire',]
+TERMS = ['leadership', 'enterpreneur', 'disruption', 'teamwork', 'humbled', 'blessed', 'courageous', 'success', 'keep moving', 'inspirational', 'inspire', 'reliance', 'humanity', 'strength', 'humility', 'you can do it', 'believe in yourself', 'oneness', 'inspiration']
 
 FILTER_WORDS = set([
     "skank",
