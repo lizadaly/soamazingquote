@@ -13,6 +13,8 @@ from PIL import Image, ImageFont, ImageDraw
 from secret import *
 from config import *
 
+TWEET_BASE_LENGTH = 280
+
 plaintext_re = re.compile(r'^[A-Za-z ]*$')
 
 def draw_word_wrap(draw, text,
@@ -70,7 +72,7 @@ def filter_tweet(tweet):
     if '@' in tweet or 'RT' in tweet or 'http' in tweet or '#' in tweet:
         return False
 
-    if len(tweet) > (140 - 23 - 23):
+    if len(tweet) > (TWEET_BASE_LENGTH - 23 - 23):
         return False
 
     # Check each word for badness; use startswith as a lazy way of matching verb tenses
