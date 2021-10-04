@@ -179,19 +179,26 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     api = _auth()
-    word = random.choice(TERMS)
-    tweet = search(word, api)
-    if tweet:
-        tweet = "“" + tweet + "”"
-        author = random.choice(AUTHORS)
-        card = generate_image(tweet, author)
-        if card:
-            if args.dry_run:
-                logging.warning(f"Did not post because dry-run was true: {tweet} ")
-                _, name = tempfile.mkstemp(suffix=".png")
-                card.save(open(name, "wb"), format="PNG")
-                print(name)
-            else:
-                post_tweet(tweet, card, author)
-    else:
-        logging.warning("Did not generate a tweet")
+    MAX_RETRIES = 5
+    retries = 0
+    while retries < MAX_RETRIES:
+        word = random.choice(TERMS)
+        tweet = search(word, api)
+        if tweet:
+            tweet = "“" + tweet + "”"
+            author = random.choice(AUTHORS)
+            card = generate_image(tweet, author)
+            if card:
+                if args.dry_run:
+                    logging.warning(f"Did not post because dry-run was true: {tweet} ")
+                    _, name = tempfile.mkstemp(suffix=".png")
+                    card.save(open(name, "wb"), format="PNG")
+                else:
+                    # post_tweet(tweet, card, author)
+                    logging.info(f"Posting tweet: {tweet}")
+                    exit()
+        else:
+            retries += 1
+            logging.warning(
+                f"Did not generate a tweet; will retry {MAX_RETRIES - retries} more times"
+            )
