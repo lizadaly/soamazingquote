@@ -66,11 +66,11 @@ def _auth():
 def post_tweet(tweet, card, author):
     """Post to twitter with the given tweet and card image as attachment"""
     byline = "—" + author["name"]
-    with tempfile.TemporaryFile() as fp:
-        card.save(fp, format="PNG")
-
-        print("Posting message {}".format(tweet))
-        api.update_status_with_media("quote.png", status=tweet + byline, file=fp)
+    _, name = tempfile.mkstemp(suffix=".png")
+    card.save(open(name, "wb"), format="PNG")
+    print("Posting message {}".format(tweet + byline))
+    media = api.media_upload(name)
+    api.update_status(tweet + byline, media_ids=[media.media_id])
 
 
 def filter_tweet(tweet):
