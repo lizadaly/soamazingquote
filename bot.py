@@ -83,6 +83,9 @@ def filter_tweet(tweet):
     if len(tweet) > (TWEET_BASE_LENGTH - 23 - 23):
         return False
 
+    if len(tweet) < 10:
+        return False
+
     # Check each word for badness; use startswith as a lazy way of matching verb tenses
     words = tweet.split(" ")
     for word in words:
@@ -103,6 +106,7 @@ def augument_term(term: str):
     term += " -filter:retweets"  # No retweets
     term += " -filter:media"  # No media
     term += " -filter:links"  # No links
+    term += " filter:safe"  # Try to remove hate speech
     return term
 
 
@@ -127,7 +131,7 @@ def search(term: str, api):
         return random.choice(list(r)).replace("\n", " ").replace('"', "")
 
 
-def generate_image(tweet, author):
+def generate_image(tweet: str, author: dict):
     """Given a tweet and a random author, generate a new twitter card"""
     im = Image.open("images/" + random.choice(author["images"]))
     card = Image.new("RGB", (CARD_WIDTH, CARD_HEIGHT), color=(0, 0, 0))
@@ -184,6 +188,9 @@ if __name__ == "__main__":
         if card:
             if args.dry_run:
                 logging.warning(f"Did not post because dry-run was true: {tweet} ")
+                _, name = tempfile.mkstemp(suffix=".png")
+                card.save(open(name, "wb"), format="PNG")
+                print(name)
             else:
                 post_tweet(tweet, card, author)
     else:

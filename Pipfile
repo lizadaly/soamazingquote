@@ -7,6 +7,8 @@ name = "pypi"
 requests = "*"
 tweepy = "*"
 Pillow = "*"
+mypy = "*"
+types-pillow = "*"
 
 [dev-packages]
 
