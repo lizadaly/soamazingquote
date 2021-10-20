@@ -194,7 +194,7 @@ if __name__ == "__main__":
                     _, name = tempfile.mkstemp(suffix=".png")
                     card.save(open(name, "wb"), format="PNG")
                 else:
-                    # post_tweet(tweet, card, author)
+                    post_tweet(tweet, card, author)
                     logging.info(f"Posting tweet: {tweet}")
                     exit()
         else:
